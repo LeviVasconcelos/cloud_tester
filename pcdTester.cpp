@@ -90,9 +90,6 @@ bool isInStableArea(std::vector<XYZNormalCloud::Ptr> &clouds,
 {
 
 
-    std::cout << "sup bitches!!: Point: " << searchPoint.x << "," << searchPoint.y << "," << searchPoint.z << endl;
-
-
     if(!(clouds.size() == trees.size() && trees.size() == neighborhood_scale.size())) {
         std::cout << "The sizes of the vectors does not agree." << endl;
         return false;
@@ -106,17 +103,12 @@ bool isInStableArea(std::vector<XYZNormalCloud::Ptr> &clouds,
         vector<int> pointIdxNKNSearch(neighborhood_scale[i]);
         vector<float> pointNKNSquaredDistance(neighborhood_scale[i]);
 
-        std::cout << "fetching neighbours..." << endl;
         int neighbours = kdtree.nearestKSearch (searchPoint, neighborhood_scale[i], pointIdxNKNSearch, pointNKNSquaredDistance);
-        std::cout << "got them" << endl;
 
         if(neighbours > 0) { //If there is a vicinity....
             //warns if the nbeighbourhood is smaller than expected
             if(neighbours < neighborhood_scale[i])
                 std::cout << "Less points then expected..." << std::endl;
-
-
-            std::cout << "let's search!" << endl;
 
 
             //copy the curvature values of each neighbour point and calculates its mean and variance..
@@ -127,25 +119,15 @@ bool isInStableArea(std::vector<XYZNormalCloud::Ptr> &clouds,
             }
 
 
-            cout << "search done succesfully" << endl;
-
-
             float mean,var;
             calculate_statistics(local_curvatures,mean,var);
             curvature_means.push_back(mean); curvature_variances.push_back(var);
         }
-        else {
-            cout << "No neighbours, what now?" << endl;
-        }
     }
-
-
-    std::cout << "sup bitches!! the eend!" << endl;
 
 
     float mean,var;
     calculate_statistics(curvature_variances,mean,var);
-    std::cout << "var of vars: " << var << endl;
 
     return false;
 }
